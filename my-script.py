@@ -17,9 +17,6 @@ print(dataset.isnull().sum())
 # Drop unnecessary columns (modify as needed)
 dataset = dataset.drop(["Referee", "League"], axis=1)
 
-# Rename columns for readability
-dataset = dataset.rename(columns={"FTHG": "HomeGoals", "FTAG": "AwayGoals", "FTR": "Result"})
-
 # Convert date column to datetime format
 dataset["Date"] = pd.to_datetime(dataset["Date"])
 
@@ -31,28 +28,18 @@ print(dataset.info())
 print("\nBasic Statistics:")
 print(dataset.describe())
 
-# Check for missing values
-print("\nMissing Values:")
-print(dataset.isnull().sum())
-
-
-print(dataset.head())
-
-
 # after running the EDA we want to do some changes to refine or clean the data:
 
 dataset.columns = dataset.columns.str.replace(" ", "_")
 
 # Fill missing numerical values with mean
+# Reason: The mean is a better measure of central tendency for continuous data
 dataset.fillna(dataset.mean(numeric_only=True), inplace=True)
 
 #since there is missmatch in date format we need to convert it to a single format i.e. dd/mm/yyyy but Pandas assumes MM/DD/YYYY.
 dataset["Date"] = pd.to_datetime(dataset["Date"], format="%d/%m/%Y", errors="coerce")
 
 # Now lets visualize the data in charts: its fun :)
-print("Dataset columns:")
-print(dataset.columns)
-
 
 # Rename columns for consistency
 dataset.rename(columns={
