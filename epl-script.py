@@ -1,6 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Load dataset
 dataset = pd.read_csv("./datasets/England 2 CSV.csv")
@@ -65,4 +67,36 @@ plt.show()
 
 sns.countplot(x="FT_Result", data=dataset, palette="Set2")
 plt.title("Distribution of Match Results (H = Home Win, A = Away Win, D = Draw)")
+plt.show()
+
+# total goals per season trends
+
+
+# Calculate total goals per season
+dataset["TotalGoals"] = dataset["HomeGoals"] + dataset["AwayGoals"]
+goals_per_season = dataset.groupby("Season")["TotalGoals"].mean()
+
+# Plot average goals per season
+plt.figure(figsize=(12, 6))
+plt.plot(goals_per_season.index, goals_per_season.values, marker="o", linestyle="-", color="green")
+plt.title("Average Goals Per Season")
+plt.xlabel("Season")
+plt.ylabel("Average Goals Per Match")
+plt.grid(True)
+plt.show()
+
+
+# To see how home advantage has changed, let’s calculate win percentages for each season.
+# Calculate win percentages
+win_counts = dataset.groupby(["Season", "FT_Result"]).size().unstack()
+win_percentage = win_counts.div(win_counts.sum(axis=1), axis=0) * 100
+
+# Plot home, away, and draw trends over seasons
+plt.figure(figsize=(12, 6))
+win_percentage.plot(kind="line", marker="o", ax=plt.gca())
+plt.title("Win Percentage Trends Over Seasons")
+plt.xlabel("Season")
+plt.ylabel("Percentage of Matches")
+plt.legend(title="Result")
+plt.grid(True)
 plt.show()
